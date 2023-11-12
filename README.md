@@ -8,3 +8,7 @@
 # Create complete module
 
 ### nest g res cats --no-spec
+
+# Design pattern
+
+### Repository pattern
