@@ -89,7 +89,7 @@ export class CatsService {
         { ...existingCat, ...updateCatDto, breed },
       );
 
-      if (!responseUpdate) {
+      if (responseUpdate.affected === 0) {
         return new HttpException('Cat not updated', HttpStatus.NOT_MODIFIED);
       }
 

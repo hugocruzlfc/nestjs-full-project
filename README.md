@@ -12,3 +12,11 @@
 # Design pattern
 
 ### Repository pattern
+
+# Libraries
+
+### @nestjs/config
+
+### @nestjs/typeorm mysql2 typeorm
+
+### class-validator class-transformer
