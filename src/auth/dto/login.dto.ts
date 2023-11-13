@@ -1,7 +1,13 @@
-import { Exclude } from 'class-transformer';
-import { RegisterDto } from './register.dto';
+import { Transform } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-export class LoginDto extends RegisterDto {
-  @Exclude()
-  name: string;
+export class LoginDto {
+  @Transform(({ value }) => value.trim())
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(6)
+  password: string;
+
+  @IsEmail()
+  email: string;
 }
