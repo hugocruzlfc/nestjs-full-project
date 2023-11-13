@@ -9,6 +9,10 @@
 
 ### nest g res cats --no-spec
 
+# Create guard
+
+### nest g guard auth --no-spec
+
 # Design pattern
 
 ### Repository pattern
