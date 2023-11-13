@@ -4,6 +4,7 @@ import { CatsController } from './cats.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cat } from './entities/cat.entity';
 import { ConfigModule } from '@nestjs/config';
+import { Breed } from 'src/breeds/entities/breed.entity';
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import { ConfigModule } from '@nestjs/config';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    TypeOrmModule.forFeature([Cat]),
+    TypeOrmModule.forFeature([Cat, Breed]),
   ],
   controllers: [CatsController],
   providers: [CatsService],

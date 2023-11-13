@@ -4,17 +4,32 @@ import { UpdateCatDto } from './dto/update-cat.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cat } from './entities/cat.entity';
 import { Repository } from 'typeorm';
+import { Breed } from 'src/breeds/entities/breed.entity';
 
 @Injectable()
 export class CatsService {
   constructor(
     @InjectRepository(Cat)
     private catsRepository: Repository<Cat>,
+    @InjectRepository(Breed)
+    private breedsRepository: Repository<Breed>,
   ) {}
 
   async create(createCatDto: CreateCatDto) {
     try {
-      const cat = this.catsRepository.create(createCatDto);
+      const breed = await this.breedsRepository.findOneBy({
+        name: createCatDto.breed,
+      });
+
+      if (!breed) {
+        return new HttpException('Breed not found', HttpStatus.NOT_FOUND);
+      }
+
+      const cat = this.catsRepository.create({
+        ...createCatDto,
+        breed,
+      });
+
       return this.catsRepository.save(cat);
     } catch (error) {
       throw new Error(error);
@@ -59,17 +74,39 @@ export class CatsService {
         return new HttpException('Cat not found', HttpStatus.NOT_FOUND);
       }
 
+      const breed = await this.breedsRepository.findOne({
+        where: {
+          name: updateCatDto.breed,
+        },
+      });
+
+      if (!breed) {
+        return new HttpException('Breed not found', HttpStatus.NOT_FOUND);
+      }
+
+      const responseUpdate = await this.catsRepository.update(
+        { id },
+        { ...existingCat, ...updateCatDto, breed },
+      );
+
+      if (!responseUpdate) {
+        return new HttpException('Cat not updated', HttpStatus.NOT_MODIFIED);
+      }
+
+      existingCat.breed = breed;
+      return existingCat;
+
       // const updatedCat = await this.catsRepository.save({
       //   ...existingCat,
       //   ...updateCatDto,
       // });
 
-      const updatedCat = await this.catsRepository.update(
-        { id },
-        { ...existingCat, ...updateCatDto },
-      );
+      // const updatedCat = await this.catsRepository.update(
+      //   { id },
+      //   { ...existingCat, ...updateCatDto },
+      // );
 
-      return updatedCat;
+      // return updatedCat;
     } catch (error) {}
   }
 
